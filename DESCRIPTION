@@ -1,0 +1,31 @@
+Package: gcamLearn
+Title: Endogenous Technology Learning-by-Doing for GCAM via gcamwrapper
+Version: 0.1.0
+Authors@R: person("Huilin", "", , "you@example.com", role = c("aut", "cre"))
+Description: Tools for running GCAM (via 'gcamwrapper') with endogenous
+    technology learning-by-doing cost updates for the transportation and
+    power sectors. Cumulative deployment is tracked period-by-period,
+    used to update technology capital/non-energy costs according to a
+    two-factor (learning + fixed-cost) learning curve, and written back
+    into the running GCAM model. Also includes helper functions for
+    post-processing and plotting scenario comparison results.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.1)
+Imports:
+    dplyr,
+    tidyr,
+    tibble,
+    readr,
+    purrr,
+    ggplot2,
+    rlang,
+    magrittr
+Suggests:
+    gcamwrapper,
+    testthat (>= 3.0.0)
+Additional_repositories: https://github.com/JGCRI/gcamwrapper
+Config/testthat/edition: 3

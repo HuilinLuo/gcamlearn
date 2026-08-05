@@ -1,0 +1,12 @@
+# R package build artifacts
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck/
+/doc/
+/Meta/
+inst/doc/
+
+# OS files
+.DS_Store

@@ -1,0 +1,24 @@
+# Generated to match roxygen2 @export tags.
+# Regenerate with `devtools::document()` after any function signature change.
+
+export(US_regions)
+export(apply_power_cost_coefficients)
+export(build_trn_learning_config)
+export(compute_learning_capacity)
+export(compute_learning_cost_coefficients)
+export(create_gcam_session)
+export(get_trn_sector)
+export(plot_power_costs)
+export(plot_power_generation_by_tech)
+export(plot_trn_costs)
+export(plot_trn_service_by_tech)
+export(power_queries)
+export(read_trn_learning_config)
+export(run_power_endo_learning)
+export(run_trn_endo_learning)
+export(setup_gcam_env)
+export(trn_queries)
+export(update_trn_tech_cost)
+
+importFrom(magrittr,"%>%")
+importFrom(rlang,.data)
