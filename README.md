@@ -58,9 +58,12 @@ To run the model some preperations:
 
 ## 2. Transportation sector learning
 
+We start by defining the initial time and deployment, as well as learning rate for transportation sector technologies. All learning rate subject to change.
+An example using GCAM-USA:
+
 ```r
 g <- create_gcam_session(
-  config_file = "cfg_2050nl_202502.xml",
+  config_file = "configuration.xml", # change to your own configuration file
   config_path = "/path/to/gcam-core/exe",
   warmup_period = 2
 )
@@ -106,16 +109,19 @@ result <- run_trn_endo_learning(g, learning_config, end_year = 2035,
 
 ## 3. Power sector learning
 
+We start by defining the initial time and deployment, as well as learning rate for power sector technologies. All learning rate subject to change.
+An example using GCAM-USA:
+
 ```r
 g <- create_gcam_session(
   config_file = "configuration_ira_USA.xml",
   config_path = "/path/to/gcam-core/exe",
-  warmup_period = 5
+  warmup_period = 5 # here it is 2015
 )
 
 run_power_endo_learning(
   g = g,
-  end_period = 11,
+  end_period = 11, # it is 2050
   map_world_path = "input_endo/mappings/learning_components_learning_map_simplified.csv",
   map_us_path    = "input_endo/mappings/learning_components_learning_map_US.csv",
   t0_world_path  = "input_endo/t0_cost_deployment.csv",
@@ -125,6 +131,8 @@ run_power_endo_learning(
 ```
 
 ## 4. Compare scenarios
+
+An example of plotting
 
 ```r
 plot_trn_service_by_tech(
