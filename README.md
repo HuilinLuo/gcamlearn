@@ -1,14 +1,14 @@
 # gcamLearn
 
-Endogenous technology learning-by-doing for GCAM, built on top of
+This package enables dndogenous technology learning-by-doing for GCAM and GCAM-USA, built on top of
 [`gcamwrapper`](https://github.com/JGCRI/gcamwrapper). Tracks cumulative
 technology deployment and updates technology costs period-by-period
 according to a two-factor (learning share + fixed share) learning curve,
 for both the **transportation** and **power** sectors.
 
-This package was refactored from a set of standalone analysis scripts into
-reusable, parameterized functions -- no personal file paths or hardcoded
-scenario assumptions are baked in; everything is passed as an argument.
+The origianl code for GCAM v6.0 see: https://github.com/trwaite/endogenous_tech_change. The code shall be used after installing gcamwrapper (for installation of gcamwrapper see: https://github.com/JGCRI/gcamwrapper), and be used in the gcamwrapper R project. More versions for v6.0 are also available.
+
+
 
 ## Installation
 
@@ -24,9 +24,9 @@ devtools::install("path/to/gcamLearn")
 https://github.com/JGCRI/gcamwrapper before using any function here that
 touches a running GCAM session.
 
-## 1. Configure the environment (optional)
+## 1. Configure the environment 
 
-Only needed if `gcamwrapper` must be built/loaded from source and its
+`gcamwrapper` must be built/loaded from source and if its
 dependency paths aren't already set via `.Renviron`:
 
 ```r
@@ -48,6 +48,13 @@ setup_gcam_env(
   osname_lowercase = "win32"
 )
 ```
+
+Necessary parts:
+To run the model some preperations:
+
+1. In the GCAM configuration file (i.e., configuration.xml), turn off the function to write the database: ../output/database_basexdb
+2. For GCAMv8.2, for some reason the "//" logic in ymls will result in fatal error and immediate shutdown of R. Solution: I have updated query forms in the R code (works for power- and transport- related queries), but for other queries in "inst/extdata/queries.yml" file, users need to pay attention to all queries with "//". An updated CO2 emission file to use: co2_query <- "world/region{region@name}/sector{sector@name}/subsector{subsector@name}/technology{tech@name}/period/ghg[NamedFilter,StringEquals,CO2]/emissions{year@year}".
+3. All the debugging are accredited to amazing Pralit and Matthew at JGCRI. For other gcamwrapper-related questions, if JGCRI people are too busy, feel free to contact Huilin (hxl5625@psu.edu).
 
 ## 2. Transportation sector learning
 
@@ -145,18 +152,3 @@ plot_power_costs(
 )
 ```
 
-## Notes on the refactor
-
-- All hardcoded personal file paths (`/Users/Huilin/...`, `C:/Users/Huilin/...`)
-  have been removed; every path is now a function argument.
-- The two versions of the transport `update_costs_for_tech()` logic that
-  existed in the original script (an early version and a later, more
-  general "v2" version) have been consolidated into a single function,
-  [`update_trn_tech_cost()`], based on the later version.
-- The power-sector script's duplicated `cap_all_cost_d_US_use` /
-  `cap_all_cost_d_world_use` blocks (an old and new attempt at the same
-  merge, left in the script back to back) have been consolidated into one
-  clean implementation in [`apply_power_cost_coefficients()`].
-- GCAM query strings are now returned by [`trn_queries()`] /
-  [`power_queries()`] instead of being scattered globals, so they're easy
-  to override for a different GCAM version's sector/subsector naming.
