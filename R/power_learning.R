@@ -35,7 +35,7 @@
 compute_learning_capacity <- function(g, current_year,
                                        map_world_path, map_us_path,
                                        US_regions = gcamLearn::US_regions,
-                                       conv_kwh_ej = 2.77778e-11,
+                                       conv_kwh_ej = 3.6e-9,
                                        hours_per_yr = 8760,
                                        use_cumulative = TRUE,
                                        queries = power_queries()) {
