@@ -218,7 +218,7 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
 
   # Get the 2025 baseline capital cost
   cap_cost_2025_us <- cap_all_cost_d_us %>%
-  dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
+  dplyr::filter(.data$period == 2025, .data$year==2025, .data$input == "capital") %>%
   dplyr::select(
     "region", "sector", "subsector", "technology",
      "adjusted-cost"
@@ -226,7 +226,7 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
   dplyr::rename(cost_2025 = "adjusted-cost")
 
   cap_cost_2025_world <- cap_all_cost_d_world %>%
-  dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
+  dplyr::filter(.data$period == 2025, .data$year==2025, .data$input == "capital") %>%
   dplyr::select(
     "region", "sector", "subsector", "technology",
      "adjusted-cost"
