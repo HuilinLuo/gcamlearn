@@ -216,6 +216,23 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
   cap_all_cost_d_us    <- gcamwrapper::get_data(g, queries$capital_cost_us)
   cap_all_cost_d_world <- gcamwrapper::get_data(g, queries$capital_cost_world)
 
+  # Get the 2025 baseline capital cost
+  cap_cost_2025_us <- cap_all_cost_d_us %>%
+  dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
+  dplyr::select(
+    "region", "sector", "subsector", "technology",
+    "period", "adjusted-cost"
+  ) %>%
+  dplyr::rename(cost_2025 = "adjusted-cost")
+
+  cap_cost_2025_world <- cap_all_cost_d_world %>%
+  dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
+  dplyr::select(
+    "region", "sector", "subsector", "technology",
+    "period", "adjusted-cost"
+  ) %>%
+  dplyr::rename(cost_2025 = "adjusted-cost")
+  
   join_cols <- c("region", "sector", "subsector", "technology", "period")
 
   cost_adjust_world <- cap_all_cost_d_world %>%
@@ -236,20 +253,45 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
       by = join_cols
     )
 
-  apply_adjustment <- function(df, coeff_col) {
-    df %>%
-      dplyr::mutate(
-        `adjusted-cost` = dplyr::case_when(
-          .data$period == next_year & .data$input == "capital" ~
-            dplyr::if_else(is.na(.data[[coeff_col]]), `adjusted-cost`, `adjusted-cost` * .data[[coeff_col]]),
-          zero_om_fixed & .data$period == next_year & .data$input == "OM-fixed" ~ 0,
-          TRUE ~ `adjusted-cost`
-        )
-      )
-  }
+ apply_adjustment <- function(df, coeff_col, cost_2025) {
 
-  cost_adjust_world <- apply_adjustment(cost_adjust_world, "cost_coeff_world_high")
-  cost_adjust_us    <- apply_adjustment(cost_adjust_us, "cost_coeff_US_high")
+ df %>%
+    dplyr::left_join(
+      cost_2025,
+      by = c("region", "sector", "subsector", "technology")
+    ) %>%
+    dplyr::mutate(
+      `adjusted-cost` = dplyr::case_when(
+
+        # Use 2025 cost as the baseline C0
+        .data$period == next_year & .data$input == "capital" ~
+          dplyr::if_else(
+            is.na(.data[[coeff_col]]) | is.na(.data$cost_2025),
+            `adjusted-cost`,
+            .data$cost_2025 * .data[[coeff_col]]
+          ),
+
+        zero_om_fixed &
+          .data$period == next_year &
+          .data$input == "OM-fixed" ~ 0,
+
+        TRUE ~ `adjusted-cost`
+      )
+    ) %>%
+    dplyr::select(-cost_2025)
+}
+
+cost_adjust_world <- apply_adjustment(
+  cost_adjust_world,
+  "cost_coeff_world_high",
+  cap_cost_2025_world
+)
+
+cost_adjust_us <- apply_adjustment(
+  cost_adjust_us,
+  "cost_coeff_US_high",
+  cap_cost_2025_us
+)
 
   merge_back <- function(original, adjusted) {
     original %>%
