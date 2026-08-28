@@ -221,7 +221,7 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
   dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
   dplyr::select(
     "region", "sector", "subsector", "technology",
-    "period", "adjusted-cost"
+     "adjusted-cost"
   ) %>%
   dplyr::rename(cost_2025 = "adjusted-cost")
 
@@ -229,7 +229,7 @@ apply_power_cost_coefficients <- function(g, cap_learning, next_year,
   dplyr::filter(.data$period == 2025, .data$input == "capital") %>%
   dplyr::select(
     "region", "sector", "subsector", "technology",
-    "period", "adjusted-cost"
+     "adjusted-cost"
   ) %>%
   dplyr::rename(cost_2025 = "adjusted-cost")
   
